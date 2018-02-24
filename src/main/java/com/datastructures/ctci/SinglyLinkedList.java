@@ -1,6 +1,8 @@
 package com.datastructures.ctci;
 
 import java.util.AbstractSequentialList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -15,10 +17,10 @@ import java.util.ListIterator;
  * 
  * Use - When you don't know how large a list you will need
  */
-public class SinglyLinkedList<T> extends AbstractSequentialList<T> implements List<T> {
+public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements List<K> {
 
-	private SinglyLinkedNode<T> head;
-	private SinglyLinkedNode<T> tail;
+	private SinglyLinkedNode<K> head;
+	private SinglyLinkedNode<K> tail;
 	private int size;
 
 	public SinglyLinkedList() {
@@ -36,11 +38,150 @@ public class SinglyLinkedList<T> extends AbstractSequentialList<T> implements Li
 	}
 
 	@Override
+	public boolean contains(Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Iterator<K> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object[] toArray() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> T[] toArray(T[] arr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean add(K element) {
+		if (element == null) {
+			return false;
+		}
+
+		insertAtEnd(element);
+		return true;
+	}
+
+	@Override
+	public boolean remove(Object obj) {
+		if ((obj == null) || isEmpty()) {
+			// TODO: iterate to ensure no node data is null, if so then remove
+			return false;
+		}
+
+		SinglyLinkedNode<K> node = head;
+
+		if (obj.equals(node.getData())) {
+			head = head.getNext();
+		} else {
+			while (!obj.equals(node.getNext().getData())) {
+				node = node.getNext();
+			}
+			node.setNext(node.getNext().getNext());
+		}
+
+		size--;
+
+		return true;
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> coll) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends K> coll) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends K> coll) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> coll) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> coll) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
 	public void clear() {
 		head = null;
 		tail = null;
 		size = 0;
 	}
+
+	@Override
+	public K get(int idx) {
+		return getElementAt(idx);
+	}
+
+	@Override
+	public K set(int idx, K element) {
+		return replaceElementAt(idx, element);
+	}
+
+	@Override
+	public void add(int idx, K element) {
+		insertAt(idx, element);
+	}
+
+	@Override
+	public K remove(int idx) {
+		return removeAt(idx);
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ListIterator<K> listIterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ListIterator<K> listIterator(int idx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<K> subList(int fromIndex, int toIndex) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	////////////////////////////////////
 
 	private boolean isValidIndex(int idx) {
 		return (idx >= 0) && (idx < size);
@@ -52,18 +193,8 @@ public class SinglyLinkedList<T> extends AbstractSequentialList<T> implements Li
 		}
 	}
 
-	@Override
-	public boolean add(T element) {
-		if (element == null) {
-			return false;
-		}
-
-		insertAtEnd(element);
-		return true;
-	}
-
-	private void insertAtFirst(T element) {
-		SinglyLinkedNode<T> node = new SinglyLinkedNode<T>(element);
+	public void insertAtFirst(K element) {
+		SinglyLinkedNode<K> node = new SinglyLinkedNode<K>(element);
 
 		if (isEmpty()) {
 			head = node;
@@ -76,36 +207,36 @@ public class SinglyLinkedList<T> extends AbstractSequentialList<T> implements Li
 		size++;
 	}
 
-	private void insertAtEnd(T element) {
+	private void insertAtEnd(K element) {
 		if (isEmpty()) {
 			insertAtFirst(element);
 		} else {
-			SinglyLinkedNode<T> node = new SinglyLinkedNode<T>(element);
+			SinglyLinkedNode<K> node = new SinglyLinkedNode<K>(element);
 			tail.setNext(node);
 			tail = node;
 			size++;
 		}
 	}
 
-	private void insertAt(int pos, T element) {
-		validatePosition(pos);
+	private void insertAt(int idx, K element) {
+		validatePosition(idx);
 
-		if (pos == 0) {
+		if (idx == 0) {
 			insertAtFirst(element);
-		} else if (pos == (size - 1)) {
+		} else if (idx == (size - 1)) {
 			insertAtEnd(element);
 		} else {
-			int idx = 0;
-			SinglyLinkedNode<T> node = head;
+			int count = 0;
+			SinglyLinkedNode<K> node = head;
 
-			while (idx != (pos - 1)) {
+			while (count != (idx - 1)) {
 				node = node.getNext();
-				idx++;
+				count++;
 			}
 
-			SinglyLinkedNode<T> nodeToInsert = new SinglyLinkedNode<T>(element);
+			SinglyLinkedNode<K> nodeToInsert = new SinglyLinkedNode<K>(element);
 
-			SinglyLinkedNode<T> temp = node.getNext();
+			SinglyLinkedNode<K> temp = node.getNext();
 			node.setNext(nodeToInsert);
 			nodeToInsert.setNext(temp);
 
@@ -113,114 +244,102 @@ public class SinglyLinkedList<T> extends AbstractSequentialList<T> implements Li
 		}
 	}
 
-	private void removeLast() {
+	public K removeFirst() {
 		if (isEmpty()) {
-			return;
+			return null;
 		} else if (size == 1) {
+			K data = head.getData();
 			clear();
-			return;
+			return data;
 		}
 
-		SinglyLinkedNode<T> node = head;
+		K data = head.getData();
+		head = head.getNext();
 
-		int pos = size - 2;
-		int idx = 0;
+		size--;
 
-		while (idx != pos) {
+		return data;
+	}
+
+	public K removeLast() {
+		if (isEmpty()) {
+			return null;
+		} else if (size == 1) {
+			K data = head.getData();
+			clear();
+			return data;
+		}
+
+		SinglyLinkedNode<K> node = head;
+
+		int secondToLastIdx = size - 2;
+		int count = 0;
+
+		while (count != secondToLastIdx) {
 			node = node.getNext();
-			idx++;
+			count++;
 		}
+
+		SinglyLinkedNode<K> nodeToRemove = node.getNext();
 
 		node.setNext(null);
 		tail = node;
 
 		size--;
+
+		return nodeToRemove.getData();
 	}
 
-	private void removeFirst() {
-		if (isEmpty()) {
-			return;
-		} else if (size == 1) {
-			clear();
-			return;
-		}
+	public K removeAt(int idx) {
+		validatePosition(idx);
 
-		SinglyLinkedNode<T> node = head.getNext();
-		head = node;
-
-		size--;
-	}
-
-	private void removeAt(int pos) {
-		validatePosition(pos);
-
-		if (pos == 0) {
-			removeFirst();
-		} else if (pos == (size - 1)) {
-			removeLast();
+		if (idx == 0) {
+			return removeFirst();
+		} else if (idx == (size - 1)) {
+			return removeLast();
 		} else {
-			SinglyLinkedNode<T> node = head;
+			SinglyLinkedNode<K> node = head;
 
-			int idx = 0;
+			int count = 0;
 
-			while (idx != (pos - 1)) {
+			while (count != (idx - 1)) {
 				node = node.getNext();
-				idx++;
+				count++;
 			}
-			node.setNext(node.getNext().getNext());
+
+			SinglyLinkedNode<K> nodeToRemove = node.getNext();
+
+			node.setNext(nodeToRemove.getNext());
 
 			size--;
+
+			return nodeToRemove.getData();
 		}
 	}
 
-	@Override
-	public boolean remove(Object o) {
-		if (o == null) {
-			// TODO: iterate to ensure no node data is null, if so then remove
-			return false;
-		}
+	private K getElementAt(int idx) {
+		validatePosition(idx);
 
-		SinglyLinkedNode<T> node = head;
-
-		if (o.equals(node.getData())) {
-			head = head.getNext();
-		} else {
-			while (!o.equals(node.getNext().getData())) {
-				node = node.getNext();
-			}
-			node.setNext(node.getNext().getNext());
-		}
-
-		size--;
-
-		return true;
-	}
-
-	@Override
-	public T get(int pos) {
-		validatePosition(pos);
-
-		if (pos == 0) {
+		if (idx == 0) {
 			return head.getData();
-		} else if (pos == (size - 1)) {
+		} else if (idx == (size - 1)) {
 			return tail.getData();
 		}
 
-		SinglyLinkedNode<T> node = head;
+		SinglyLinkedNode<K> node = head;
 
-		int idx = 0;
+		int count = 0;
 
-		while (idx != pos) {
+		while (count != idx) {
 			node = node.getNext();
-			idx++;
+			count++;
 		}
 
 		return node.getData();
 	}
 
-	@Override
-	public ListIterator<T> listIterator(int index) {
-		// TODO Auto-generated method stub
+	private K replaceElementAt(int index, K element) {
+		// TODO
 		return null;
 	}
 

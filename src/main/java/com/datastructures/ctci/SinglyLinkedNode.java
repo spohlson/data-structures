@@ -1,27 +1,27 @@
 package com.datastructures.ctci;
 
-public class SinglyLinkedNode<T> {
+public class SinglyLinkedNode<K> {
 
-	T data;
-	SinglyLinkedNode<T> next;
+	K data;
+	SinglyLinkedNode<K> next;
 
-	public SinglyLinkedNode(T data) {
+	public SinglyLinkedNode(K data) {
 		this.data = data;
 	}
 
-	public T getData() {
+	public K getData() {
 		return data;
 	}
 
-	public void setData(T data) {
+	public void setData(K data) {
 		this.data = data;
 	}
 
-	public SinglyLinkedNode<T> getNext() {
+	public SinglyLinkedNode<K> getNext() {
 		return next;
 	}
 
-	public void setNext(SinglyLinkedNode<T> next) {
+	public void setNext(SinglyLinkedNode<K> next) {
 		this.next = next;
 	}
 
