@@ -1,9 +1,9 @@
 package com.datastructures.ctci;
 
+import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.datastructures.ctci.SinglyLinkedList;
 
 public class SinglyLinkedListTest {
 
@@ -30,6 +30,35 @@ public class SinglyLinkedListTest {
 
 		ll.clear();
 		Assert.assertTrue(ll.isEmpty());
+	}
+
+	@Test
+	public void addAllTest() {
+		SinglyLinkedList<Integer> ll = new SinglyLinkedList<>();
+		Assert.assertTrue(ll.isEmpty());
+
+		ll.addAll(Arrays.asList(1, 2, 3, 4));
+		Assert.assertTrue(ll.size() == 4);
+	}
+
+	@Test
+	public void reverseTest() {
+		SinglyLinkedList<Integer> ll = new SinglyLinkedList<>();
+		ll.addAll(Arrays.asList(0, 1, 2, 3));
+
+		for (int i = 0; i < ll.size(); i++) {
+			int val = ll.get(i);
+			Assert.assertTrue(val == i);
+		}
+
+		ll.reverse();
+
+		int[] reversedArr = new int[] { 3, 2, 1, 0 };
+
+		for (int i = 0; i < ll.size(); i++) {
+			int val = ll.get(i);
+			Assert.assertTrue(val == reversedArr[i]);
+		}
 	}
 
 }

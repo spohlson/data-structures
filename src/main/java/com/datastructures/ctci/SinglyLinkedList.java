@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.springframework.util.CollectionUtils;
+
 /**
  * LinkedList Pros/Cons & When to Use
  * 
@@ -100,10 +102,20 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean addAll(Collection<? extends K> coll) {
-		// TODO Auto-generated method stub
-		return false;
+		if (CollectionUtils.isEmpty(coll)) {
+			return false;
+		}
+
+		K[] arr = (K[]) coll.toArray();
+
+		for (K element : arr) {
+			insertAtEnd(element);
+		}
+
+		return true;
 	}
 
 	@Override
@@ -341,6 +353,41 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 	private K replaceElementAt(int index, K element) {
 		// TODO
 		return null;
+	}
+
+	public void reverse() {
+		if (isEmpty()) {
+			return;
+		}
+
+		SinglyLinkedNode<K> prev = null;
+		SinglyLinkedNode<K> curr = head;
+		tail = head;
+
+		while (curr != null) {
+			SinglyLinkedNode<K> next = curr.getNext();
+
+			curr.setNext(prev);
+
+			prev = curr;
+
+			curr = next;
+		}
+
+		head = prev;
+	}
+
+	/**
+	 * For testing purposes.
+	 */
+	public void printNodesInOrder() {
+		SinglyLinkedNode<K> curr = head;
+
+		while (curr != null) {
+			System.out.print(curr.getData() + " --> ");
+			curr = curr.getNext();
+		}
+		System.out.println("");
 	}
 
 }
