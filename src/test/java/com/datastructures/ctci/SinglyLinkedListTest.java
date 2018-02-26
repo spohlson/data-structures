@@ -61,4 +61,29 @@ public class SinglyLinkedListTest {
 		}
 	}
 
+	@Test
+	public void removeTest() {
+		SinglyLinkedList<Integer> ll = new SinglyLinkedList<>();
+		Assert.assertFalse(ll.remove(null));
+		Assert.assertFalse(ll.remove(new Integer(1)));
+
+		ll.addAll(Arrays.asList(0, 1));
+
+		ll.remove(new Integer(1));
+
+		Assert.assertTrue(ll.size() == 1);
+		Assert.assertTrue(ll.getFirst() == 0);
+		Assert.assertTrue(ll.getLast() == 0);
+
+		ll.addAll(Arrays.asList(1, 2, 3, 4));
+
+		ll.remove(new Integer(3));
+
+		Assert.assertTrue(ll.get(3) == 4);
+
+		ll.remove(new Integer(4));
+
+		Assert.assertTrue(ll.getLast() == 2);
+	}
+
 }

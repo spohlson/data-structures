@@ -72,7 +72,7 @@ public class ListMethodsToOverride<K> implements List<K> {
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends K> coll) {
+	public boolean addAll(int idx, Collection<? extends K> coll) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -102,13 +102,13 @@ public class ListMethodsToOverride<K> implements List<K> {
 	}
 
 	@Override
-	public K set(int index, K element) {
+	public K set(int idx, K element) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void add(int index, K element) {
+	public void add(int idx, K element) {
 		// TODO Auto-generated method stub
 
 	}
