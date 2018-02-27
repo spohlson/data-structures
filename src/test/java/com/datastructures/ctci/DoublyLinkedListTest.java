@@ -88,7 +88,7 @@ public class DoublyLinkedListTest {
 	}
 
 	@Test
-	public void removeAt() {
+	public void removeAtTest() {
 		DoublyLinkedList<Integer> ll = new DoublyLinkedList<>();
 		ll.add(0);
 		ll.add(1);
