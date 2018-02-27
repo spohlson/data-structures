@@ -26,5 +26,7 @@ buildscript {
 dependencies {
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+    
+    compile group: 'com.google.guava', name: 'guava', version: '24.0-jre'
 
 }

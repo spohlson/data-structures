@@ -5,6 +5,15 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Binary Search Trees: Pros/Cons & When to Use
+ * 
+ * Pros:
+ * - Doesn't require much memory
+ * - Traverse/add/delete/search elements in order
+ * - Good for finding closest elements and searching in ranges
+ *
+ */
 public class SortedArrayBinarySearch {
 
 	/**
