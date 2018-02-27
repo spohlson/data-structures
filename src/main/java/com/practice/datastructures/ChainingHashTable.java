@@ -1,4 +1,4 @@
-package com.datastructures.ctci;
+package com.practice.datastructures;
 
 import java.util.Iterator;
 import java.util.LinkedList;

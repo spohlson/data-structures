@@ -1,9 +1,11 @@
-package com.datastructures.ctci;
+package com.practice.datastructures;
 
 import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.practice.datastructures.DoublyLinkedList;
 
 public class DoublyLinkedListTest {
 

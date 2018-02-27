@@ -1,4 +1,4 @@
-package com.datastructures.ctci;
+package com.practice.datastructures;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashFunction;

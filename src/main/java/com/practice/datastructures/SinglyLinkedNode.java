@@ -1,4 +1,4 @@
-package com.datastructures.ctci;
+package com.practice.datastructures;
 
 public class SinglyLinkedNode<K> {
 

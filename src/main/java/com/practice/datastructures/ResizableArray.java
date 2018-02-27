@@ -1,4 +1,4 @@
-package com.datastructures.ctci;
+package com.practice.datastructures;
 
 import java.util.AbstractList;
 import java.util.List;

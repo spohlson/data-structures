@@ -1,4 +1,4 @@
-package com.datastructures.ctci;
+package com.practice.datastructures;
 
 import java.util.AbstractSequentialList;
 import java.util.Collection;
@@ -8,57 +8,11 @@ import java.util.ListIterator;
 
 import org.springframework.util.CollectionUtils;
 
-/**
- * LinkedList Pros/Cons & When to Use
- * 
- * Pros:
- * - Easy insertion/removal of elements.
- * 
- * Cons:
- * - Accessing a specific element requires traversing from the head
- * which can take longer than an array access.
- * - Requires more memory.
- * - Easily corrupted (one can easily inset data in the middle).
- * 
- * Big O:
- * - Finding a specific element: 0(N)
- * - Inserting/Removing 1st element: 0(1)
- * - Inserting at end of list: 0(1)
- * - Removing last element: SinglyLinkedList - O(N), DoublyLinkedList - O(1)
- * - Inserting element somewhere in middle: O(N)
- * 
- * Use when:
- * - You need constant time insertions/deletions (such as in real-time
- * computing where time predictability is critical).
- * 
- * - You don't know how many items will be in the list (with arrays you may
- * need to redeclare and copy memory if it grows too big).
- * 
- * - You don't need random access to any elements.
- * 
- * - You want to be able to insert items in the middle of the list (with arrays
- * you may need to redeclare and copy memory if it grows too big).
- * 
- * ^^^ You have a list app where you want to add/remove lots of items, order
- * matters, but you don't want to recopy the entire list after each insertion
- * or removal.
- * 
- * Example:
- * You create an Errands App that you can add errands to a list but geography
- * determines order. [BANK-->GROCERIES-->DRYCLEANING]. You want to add grabbing
- * STAMPS which is next to the BANK so instead of making a whole new list to
- * in the correct order you'd just have BANK point to STAMPS.
- * [BANK-->STAMPS-->GROCERIES-->DRYCLEANING].
- */
-public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements List<K> {
+public class DoublyLinkedList<K> extends AbstractSequentialList<K> implements List<K> {
 
-	private SinglyLinkedNode<K> head;
-	private SinglyLinkedNode<K> tail;
+	DoublyLinkedNode<K> head;
+	DoublyLinkedNode<K> tail;
 	private int size;
-
-	public SinglyLinkedList() {
-		size = 0;
-	}
 
 	@Override
 	public int size() {
@@ -117,24 +71,22 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 			return removeLast() != null;
 		}
 
-		SinglyLinkedNode<K> node = head;
+		DoublyLinkedNode<K> curr = head;
 
-		while ((node.getNext() != null) && !obj.equals(node.getNext().getData())) {
-			node = node.getNext();
+		while ((curr != null) && !obj.equals(curr.getData())) {
+			curr = curr.getNext();
 		}
 
-		if (node.getNext() == null) {
+		if (curr == null) {
 			// Element not in list
 			return false;
 		}
 
-		SinglyLinkedNode<K> next = node.getNext().getNext();
+		DoublyLinkedNode<K> prev = curr.getPrev();
+		DoublyLinkedNode<K> next = curr.getNext();
 
-		node.setNext(next);
-
-		if (next == null) {
-			tail = node;
-		}
+		prev.setNext(next);
+		next.setPrev(prev);
 
 		size--;
 
@@ -209,13 +161,13 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 	}
 
 	@Override
-	public int indexOf(Object o) {
+	public int indexOf(Object obj) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int lastIndexOf(Object o) {
+	public int lastIndexOf(Object obj) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -251,31 +203,34 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 	}
 
 	public void insertAtFirst(K element) {
-		SinglyLinkedNode<K> node = new SinglyLinkedNode<K>(element);
+		DoublyLinkedNode<K> node = new DoublyLinkedNode<K>(element);
 
 		if (isEmpty()) {
 			head = node;
 			tail = head;
 		} else {
 			node.setNext(head);
+			head.setPrev(node);
 			head = node;
 		}
-
 		size++;
 	}
 
-	private void insertAtEnd(K element) {
+	public void insertAtEnd(K element) {
+		DoublyLinkedNode<K> node = new DoublyLinkedNode<K>(element);
+
 		if (isEmpty()) {
-			insertAtFirst(element);
+			head = node;
+			tail = head;
 		} else {
-			SinglyLinkedNode<K> node = new SinglyLinkedNode<K>(element);
+			node.setPrev(tail);
 			tail.setNext(node);
 			tail = node;
-			size++;
 		}
+		size++;
 	}
 
-	private void insertAt(int idx, K element) {
+	public void insertAt(int idx, K element) {
 		validatePosition(idx);
 
 		if (idx == 0) {
@@ -283,19 +238,24 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 		} else if (idx == (size - 1)) {
 			insertAtEnd(element);
 		} else {
+			int prevIdx = idx - 1;
 			int count = 0;
-			SinglyLinkedNode<K> node = head;
 
-			while (count != (idx - 1)) {
-				node = node.getNext();
+			DoublyLinkedNode<K> prev = head;
+
+			while (count != prevIdx) {
+				prev = prev.getNext();
 				count++;
 			}
 
-			SinglyLinkedNode<K> nodeToInsert = new SinglyLinkedNode<K>(element);
+			DoublyLinkedNode<K> next = prev.getNext();
 
-			SinglyLinkedNode<K> temp = node.getNext();
-			node.setNext(nodeToInsert);
-			nodeToInsert.setNext(temp);
+			DoublyLinkedNode<K> node = new DoublyLinkedNode<K>(element);
+			node.setPrev(prev);
+			node.setNext(next);
+
+			prev.setNext(node);
+			next.setPrev(node);
 
 			size++;
 		}
@@ -305,13 +265,14 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 		if (isEmpty()) {
 			return null;
 		} else if (size == 1) {
-			K data = head.getData();
 			clear();
-			return data;
+			return null;
 		}
 
 		K data = head.getData();
+
 		head = head.getNext();
+		head.setPrev(null);
 
 		size--;
 
@@ -322,70 +283,54 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 		if (isEmpty()) {
 			return null;
 		} else if (size == 1) {
-			K data = head.getData();
 			clear();
-			return data;
+			return null;
 		}
 
-		SinglyLinkedNode<K> node = head;
+		K data = tail.getData();
 
-		int secondToLastIdx = size - 2;
-		int count = 0;
-
-		while (count != secondToLastIdx) {
-			node = node.getNext();
-			count++;
-		}
-
-		SinglyLinkedNode<K> nodeToRemove = node.getNext();
-
-		node.setNext(null);
-		tail = node;
+		DoublyLinkedNode<K> newTail = tail.getPrev();
+		newTail.setNext(null);
+		tail = newTail;
 
 		size--;
 
-		return nodeToRemove.getData();
+		return data;
 	}
 
 	public K removeAt(int idx) {
-		validatePosition(idx);
-
-		if (idx == 0) {
+		if (!isValidIndex(idx)) {
+			return null;
+		} else if (idx == 0) {
 			return removeFirst();
 		} else if (idx == (size - 1)) {
 			return removeLast();
-		} else {
-			SinglyLinkedNode<K> node = head;
-
-			int count = 0;
-
-			while (count != (idx - 1)) {
-				node = node.getNext();
-				count++;
-			}
-
-			SinglyLinkedNode<K> nodeToRemove = node.getNext();
-
-			node.setNext(nodeToRemove.getNext());
-
-			size--;
-
-			return nodeToRemove.getData();
 		}
+
+		DoublyLinkedNode<K> curr = head;
+		int count = 0;
+
+		while (idx != count) {
+			curr = curr.getNext();
+			count++;
+		}
+
+		DoublyLinkedNode<K> prev = curr.getPrev();
+		DoublyLinkedNode<K> next = curr.getNext();
+
+		prev.setNext(next);
+		next.setPrev(prev);
+
+		size--;
+
+		return curr.getData();
 	}
 
 	private K getElementAt(int idx) {
 		validatePosition(idx);
 
-		if (idx == 0) {
-			return head.getData();
-		} else if (idx == (size - 1)) {
-			return tail.getData();
-		}
-
-		SinglyLinkedNode<K> node = head;
-
 		int count = 0;
+		DoublyLinkedNode<K> node = head;
 
 		while (count != idx) {
 			node = node.getNext();
@@ -409,32 +354,27 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 	}
 
 	public void reverse() {
-		if (isEmpty()) {
-			return;
-		}
+		DoublyLinkedNode<K> curr = tail;
 
-		SinglyLinkedNode<K> prev = null;
-		SinglyLinkedNode<K> curr = head;
 		tail = head;
+		head = curr;
 
 		while (curr != null) {
-			SinglyLinkedNode<K> next = curr.getNext();
+			DoublyLinkedNode<K> prev = curr.getPrev();
+			DoublyLinkedNode<K> next = curr.getNext();
 
 			curr.setNext(prev);
+			curr.setPrev(next);
 
-			prev = curr;
-
-			curr = next;
+			curr = prev;
 		}
-
-		head = prev;
 	}
 
 	/**
 	 * For testing purposes.
 	 */
 	public void printNodesInOrder() {
-		SinglyLinkedNode<K> curr = head;
+		DoublyLinkedNode<K> curr = head;
 
 		while (curr != null) {
 			System.out.print(curr.getData() + " --> ");
@@ -444,4 +384,3 @@ public class SinglyLinkedList<K> extends AbstractSequentialList<K> implements Li
 	}
 
 }
-

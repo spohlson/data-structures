@@ -1,4 +1,4 @@
-package com.datastructures.problems;
+package com.practice.problems;
 
 import java.util.Scanner;
 

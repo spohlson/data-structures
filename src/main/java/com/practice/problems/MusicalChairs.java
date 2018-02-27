@@ -1,4 +1,4 @@
-package com.datastructures.problems;
+package com.practice.problems;
 
 public class MusicalChairs {
 
