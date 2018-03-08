@@ -12,26 +12,12 @@ import org.slf4j.LoggerFactory;
 public class JukeBox {
 
 	/**
-	 * CD
-	 * Song
-	 * Artist
-	 * Jukebox
-	 * Playlist (queue for what to play next)
-	 * Display (details on screen)
-	 * 
 	 * 1. Create Jukebox
-	 * 2. Create CDs, Artists, Songs
-	 * 3. Create Randomized Playlist
-	 * 4. Create Display of what song/artist is playing, what's up next,
-	 * catalog to allow user to scroll through music
-	 * 5. Allow user to select song to play next
-	 * 6. Insert song into top of queue
-	 * 7. Play song
-	 */
-
-	/**
-	 * Create JukeBox
-	 * 
+	 * 2. Create CDs & Songs
+	 * 3. Create a queue for selected songs to be added to
+	 * 4. Allow user to scroll through music and select song to play next
+	 * 6. Insert song at end of queue
+	 * 7. Play song from queue
 	 */
 
 	private static final Logger LOG = LoggerFactory.getLogger(JukeBox.class);
@@ -105,12 +91,9 @@ public class JukeBox {
 		}
 	}
 
-	/**
-	 * TODO
-	 */
 	public void selectSong(int cdIndex, int songIndex) {
-		// create PlayDetails
-		// add to queue
+		PlayDetails details = new PlayDetails(cdIndex, songIndex);
+		queue.add(details);
 	}
 
 	public static void main(String[] args) {
