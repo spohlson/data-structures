@@ -52,6 +52,9 @@ public class LinkedListDetectCycle {
 
 	}
 
+	/**
+	 * My solution
+	 */
 	public boolean hasCycle(Node head) {
 		Set<Node> nodes = new HashSet<>();
 		Node curr = head;
@@ -68,6 +71,29 @@ public class LinkedListDetectCycle {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Hackerrank top solution
+	 */
+	public boolean hasCycleOtherSolution(Node head) {
+		if (head == null) {
+			return false;
+		} else {
+			Node slow = head;
+			Node fast = head.getNext();
+
+			while ((fast != null) && (fast.getNext() != null) && (fast != slow)) {
+				slow = slow.getNext();
+				fast = fast.getNext().getNext();
+			}
+
+			if ((fast != null) && (fast == slow)) {
+				return true;
+			}
+
+			return false;
+		}
 	}
 
 	@Test
@@ -100,6 +126,21 @@ public class LinkedListDetectCycle {
 		node.setNext(node);
 
 		boolean hasCycle = hasCycle(node);
+		Assert.assertTrue(hasCycle);
+	}
+
+	@Test
+	public void testCycle4() {
+		Node six = new Node(6);
+		Node five = new Node(5, six);
+		Node four = new Node(4, five);
+		Node three = new Node(3, four);
+		Node two = new Node(2, three);
+		Node one = new Node(1, two);
+
+		six.setNext(four);
+
+		boolean hasCycle = hasCycle(one);
 		Assert.assertTrue(hasCycle);
 	}
 
