@@ -4,8 +4,6 @@ import java.util.Scanner;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MergeSortCountInversions {
 
@@ -48,53 +46,51 @@ public class MergeSortCountInversions {
 	 * 4
 	 */
 
-	private static final Logger LOG = LoggerFactory.getLogger(MergeSortCountInversions.class);
-
-	public static long countInversionsOne(int[] arr) {
-		int[] aux = arr.clone();
-		return countInversions(arr, 0, arr.length - 1, aux, "1st Level", 1);
+	public static long countInversions(int[] arr) {
+		int[] temp = arr.clone();
+		return mergeSort(arr, temp, 0, arr.length - 1);
 	}
 
-	private static long countInversions(int[] arr, int lo, int hi, int[] aux, String level,
-			int levelCount) {
-		if (lo >= hi) {
+	private static long mergeSort(int[] arr, int[] temp, int leftStart, int rightEnd) {
+		if (leftStart >= rightEnd) {
 			return 0;
 		}
 
-		int mid = lo + ((hi - lo) / 2);
-		LOG.info("{} {} - hi = {}, lo = {}, mid = {}", level, levelCount, hi, lo, mid);
+		int mid = leftStart + ((rightEnd - leftStart) / 2);
 
 		long count = 0;
-		count += countInversions(aux, lo, mid, arr, "2nd Level", levelCount++);
-		count += countInversions(aux, mid + 1, hi, arr, "3rd Level", levelCount++);
-		count += merge(arr, lo, mid, hi, aux);
+		count += mergeSort(temp, arr, leftStart, mid);
+		count += mergeSort(temp, arr, mid + 1, rightEnd);
+		count += mergeHalves(arr, temp, leftStart, mid, rightEnd);
 
 		return count;
 	}
 
-	private static long merge(int[] arr, int lo, int mid, int hi, int[] aux) {
+	private static long mergeHalves(int[] arr, int[] temp, int leftStart, int mid, int rightEnd) {
 		long count = 0;
-		int i = lo;
-		int j = mid + 1;
-		int k = lo;
+		int left = leftStart;
+		int right = mid + 1;
+		int index = leftStart;
 
-		while ((i <= mid) || (j <= hi)) {
-			if (i > mid) {
-				arr[k++] = aux[j++];
-			} else if (j > hi) {
-				arr[k++] = aux[i++];
-			} else if (aux[i] <= aux[j]) {
-				arr[k++] = aux[i++];
+		while ((left <= mid) || (right <= rightEnd)) {
+
+			if (left > mid) {
+				arr[index++] = temp[right++];
+			} else if ((right > rightEnd) || (temp[left] <= temp[right])) {
+				arr[index++] = temp[left++];
 			} else {
-				arr[k++] = aux[j++];
-				count += (mid + 1) - i;
+				arr[index++] = temp[right++];
+
+				count += (mid + 1) - left;
 			}
 		}
 
 		return count;
 	}
 
-	public static int countInversions(int[] arr) {
+	/////////////////////////////////////////////////
+
+	public static int countInversionsNonMergeSort(int[] arr) {
 		int inversions = 0;
 		int len = arr.length;
 
@@ -116,28 +112,22 @@ public class MergeSortCountInversions {
 		return inversions;
 	}
 
+	/////////////////////////////////////////////////
+
 	@Test
 	public void test() {
 		int[] arr = new int[] { 2, 1, 3, 1, 2 };
 		long expected = 4;
-		long output = countInversionsOne(arr);
-		Assert.assertTrue(expected == output);
+		long output = countInversions(arr);
+		Assert.assertEquals(expected, output);
 	}
 
 	@Test
 	public void testOne() {
 		int[] arr = new int[] { 1, 1, 1, 2, 2 };
-		int expected = 0;
-		int output = countInversions(arr);
-		Assert.assertTrue(expected == output);
-	}
-
-	@Test
-	public void testTwo() {
-		int[] arr = new int[] { 2, 1, 3, 1, 2 };
-		int expected = 4;
-		int output = countInversions(arr);
-		Assert.assertTrue(expected == output);
+		long expected = 0;
+		long output = countInversions(arr);
+		Assert.assertEquals(expected, output);
 	}
 
 	public static void main(String[] args) {
@@ -151,7 +141,7 @@ public class MergeSortCountInversions {
 			for (int arr_i = 0; arr_i < n; arr_i++) {
 				arr[arr_i] = in.nextInt();
 			}
-			int result = countInversions(arr);
+			long result = countInversions(arr);
 			System.out.println(result);
 		}
 		in.close();
