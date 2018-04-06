@@ -25,6 +25,10 @@ buildscript {
 
 dependencies {
 
+    configurations.all {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
+
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     
     compile group: 'com.google.guava', name: 'guava', version: '24.0-jre'
@@ -35,5 +39,7 @@ dependencies {
     
     compile 'junit:junit:4.12'
     testCompile 'junit:junit:4.12'
+    
+    compile 'org.apache.commons:commons-lang3:3.7'    
 
 }
