@@ -2,6 +2,7 @@ package com.practice.problems;
 
 import java.util.Stack;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,55 +29,202 @@ public class TowerOfHanoi {
 	 */
 
 	private static final Logger LOG = LoggerFactory.getLogger(TowerOfHanoi.class);
+	private static final int FIRST_ROD = 1;
 
-	private Stack<Integer> rod1;
-	private Stack<Integer> rod2;
-	private Stack<Integer> rod3;
+	private int moves;
 
-	public void init() {
-		rod1 = new Stack<>();
-		rod1.push(3);
-		rod1.push(2);
-		rod1.push(1);
+	public class Rod {
 
-		rod2 = new Stack<>();
-		rod3 = new Stack<>();
+		private int id;
+		private Stack<Integer> stack;
+		private Rod prev;
+		private Rod next;
+
+		public Rod(int id) {
+			this.id = id;
+		}
+
+		public Rod(int id, Rod next) {
+			this(id);
+			this.next = next;
+			stack = new Stack<>();
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public void setId(int id) {
+			this.id = id;
+		}
+
+		public Stack<Integer> getStack() {
+			return stack;
+		}
+
+		public void setStack(Stack<Integer> stack) {
+			this.stack = stack;
+		}
+
+		public Rod getPrev() {
+			return prev;
+		}
+
+		public void setPrev(Rod prev) {
+			this.prev = prev;
+		}
+
+		public Rod getNext() {
+			return next;
+		}
+
+		public void setNext(Rod next) {
+			this.next = next;
+		}
+
+		public boolean canPushDisk(int disk) {
+			return stack.isEmpty() || (stack.peek() > disk);
+		}
+
 	}
 
-	public void moveAllDisksToAnotherRod() {
-		// move 1 to rod3
-		int one = rod1.pop();
-		rod3.push(one);
-		// move 2 to rod2
-		int two = rod1.pop();
-		rod2.push(two);
-		// move 1 to rod2
-		one = rod3.pop();
-		rod2.push(one);
-		// move 3 to rod3
-		int three = rod1.pop();
-		rod3.push(three);
-		// move 1 to rod1
-		one = rod2.pop();
-		rod1.push(one);
-		// move 2 to rod3
-		two = rod2.pop();
-		rod3.push(two);
-		// move 1 to rod3
-		one = rod1.pop();
-		rod3.push(one);
+	public Rod createRods(int numOfDisks) {
+		moves = 0;
+
+		Rod first = new Rod(FIRST_ROD);
+		Stack<Integer> firstStack = new Stack<>();
+
+		int count = numOfDisks;
+		while (count > 0) {
+			firstStack.push(count);
+			count--;
+		}
+		first.setStack(firstStack);
+
+		Rod third = new Rod(3, first);
+
+		Rod second = new Rod(2, third);
+		second.setPrev(first);
+
+		first.setNext(second);
+		first.setPrev(third);
+
+		third.setPrev(second);
+
+		return first;
 	}
 
-	public void logRod(Stack<Integer> rod) {
-		LOG.info("{}", rod);
+	public void moveDisks(Rod rod, int totalDisks) {
+		boolean odd = (totalDisks % 2) == 1;
+
+		int rodId = rod.getId();
+		Stack<Integer> stack = rod.getStack();
+
+		Rod next = (odd) ? rod.getPrev() : rod.getNext();
+
+		if (stack.isEmpty()) {
+			moveDisks(next, totalDisks);
+			return;
+		} else if ((rodId != FIRST_ROD) && (stack.size() == totalDisks)) {
+			return;
+		}
+
+		int disk = stack.peek();
+
+		if (!next.canPushDisk(disk)) {
+			Rod nextNext = (odd) ? next.getPrev() : next.getNext();
+
+			if (!nextNext.canPushDisk(disk)) {
+				moveDisks(next, totalDisks);
+				return;
+			}
+			next = nextNext;
+		}
+
+		stack.pop();
+		next.getStack().push(disk);
+
+		moves++;
+
+		logMove(rod);
+
+		moveDisks((odd) ? next.getPrev() : next.getNext(), totalDisks);
+	}
+
+	public void logMove(Rod rod) {
+		LOG.debug("Move {}", moves);
+
+		int rodId = rod.getId();
+		Rod firstRod = rod;
+
+		if (rodId == 1) {
+			firstRod = rod;
+		} else if (rodId == 2) {
+			firstRod = rod.getNext().getNext();
+		} else {
+			firstRod = rod.getNext();
+		}
+
+		LOG.debug("{}---{}---{}", firstRod.getStack(), firstRod.getNext().getStack(),
+				firstRod.getNext().getNext().getStack());
+	}
+
+	public void toh(int n, char from, char to, char aux) {
+
 	}
 
 	@Test
-	public void test() {
-		init();
-		logRod(rod1);
-		moveAllDisksToAnotherRod();
-		logRod(rod3);
+	public void test3Disks() {
+		int numOfDisks = 3;
+		Rod firstRod = createRods(numOfDisks);
+		LOG.debug("Initial Rods:\n1. {}\n2. {}\n3. {}", firstRod.getStack(),
+				firstRod.getNext().getStack(), firstRod.getNext().getNext().getStack());
+
+		moveDisks(firstRod, firstRod.getStack().size());
+
+		LOG.debug("Final Rods:\n1. {}\n2. {}\n3. {}", firstRod.getStack(),
+				firstRod.getNext().getStack(), firstRod.getNext().getNext().getStack());
+
+		Assert.assertTrue(firstRod.getStack().isEmpty());
+		Assert.assertTrue(firstRod.getNext().getStack().isEmpty());
+
+		Rod finalRod = firstRod.getNext().getNext();
+		Stack<Integer> finalStack = finalRod.getStack();
+
+		for (int i = 1; i <= numOfDisks; i++) {
+			Assert.assertTrue(finalStack.pop() == i);
+		}
+
+		LOG.debug("Moves: {}", moves);
+
+		Assert.assertTrue(moves == 7);
+	}
+
+	@Test
+	public void test4Disks() {
+		int numOfDisks = 4;
+		Rod firstRod = createRods(numOfDisks);
+		LOG.debug("Initial Rods:\n1. {}\n2. {}\n3. {}", firstRod.getStack(),
+				firstRod.getNext().getStack(), firstRod.getNext().getNext().getStack());
+
+		moveDisks(firstRod, firstRod.getStack().size());
+
+		LOG.debug("Final Rods:\n1. {}\n2. {}\n3. {}", firstRod.getStack(),
+				firstRod.getNext().getStack(), firstRod.getNext().getNext().getStack());
+
+		Assert.assertTrue(firstRod.getStack().isEmpty());
+		Assert.assertTrue(firstRod.getNext().getStack().isEmpty());
+
+		Rod finalRod = firstRod.getNext().getNext();
+		Stack<Integer> finalStack = finalRod.getStack();
+
+		for (int i = 1; i <= numOfDisks; i++) {
+			Assert.assertTrue(finalStack.pop() == i);
+		}
+
+		LOG.debug("Moves: {}", moves);
+
+		Assert.assertTrue(moves == 15);
 	}
 
 }
