@@ -20,45 +20,81 @@ public class TicTacToe {
 	 * Do a single pass over every square
 	 */
 
-	private Player[][] board;
+	private char[][] board;
 
-	public class Player {
-
-		private int userId;
-
-		public Player(int userId) {
-			if ((userId >= 2) || (userId < 0)) {
-				// throw some exception
-			}
-			this.userId = userId;
-		}
-
-		private boolean isX() {
-			return userId == 1;
-		}
-
-		private int getUserId() {
-			return userId;
-		}
-
+	public TicTacToe(char[][] board) {
+		this.board = board;
 	}
 
-	//	public boolean isPlayerWinner(Player player) {
-	//		int numOfRows = board.length;
-	//		int numOfColumns = board[0].length;
-	//
-	//		Player[] column = board[0][0];
-	//
-	//		for (int i = 0; i < numOfColumns; i++) {
-	//			int rowIndex = 0;
-	//
-	//			while (rowIndex < numOfRows) {
-	//				Player[] row = board[rowIndex];
-	//
-	//				rowIndex++;
-	//			}
-	//
-	//		}
-	//	}
+	public boolean isWon() {
+		return !(checkRows() && checkColumns() && checkDiagonally());
+	}
+
+	private boolean checkRows() {
+		int len = board[0].length;
+
+		for (int i = 0; i < len; i++) {
+			char[] row = board[i];
+			int count = 0;
+
+			for (char letter : row) {
+
+				if (letter == 'X') {
+					count++;
+				}
+			}
+
+			if ((count == 0) || (count == len)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean checkColumns() {
+		int len = board[0].length;
+
+		for (int i = 0; i < len; i++) {
+			int count = 0;
+
+			for (int j = 0; j < len; j++) {
+				char letter = board[j][i];
+
+				if (letter == 'X') {
+					count++;
+				}
+			}
+
+			if ((count == 0) || (count == len)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean checkDiagonally() {
+		int len = board[0].length;
+		int countOne = 0;
+		int countTwo = 0;
+
+		for (int i = 0; i < len; i++) {
+			char letter = board[i][i];
+
+			if (letter == 'X') {
+				countOne++;
+			}
+
+			letter = board[i][len - 1 - i];
+
+			if (letter == 'X') {
+				countTwo++;
+			}
+		}
+
+		if ((countOne == 0) || (countOne == len) || (countTwo == 0) || (countTwo == len)) {
+			return false;
+		}
+		return true;
+	}
 
 }
