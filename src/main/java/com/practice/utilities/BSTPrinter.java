@@ -8,13 +8,13 @@ import com.practice.datastructures.Node;
 
 public class BSTPrinter {
 
-	public static <T extends Comparable<?>> void printNode(Node<T> root) {
+	public static <T extends Comparable<T>> void printNode(Node<T> root) {
 		int maxLevel = BSTPrinter.maxLevel(root);
 
 		printNodeInternal(Collections.singletonList(root), 1, maxLevel);
 	}
 
-	private static <T extends Comparable<?>> void printNodeInternal(List<Node<T>> nodes, int level,
+	private static <T extends Comparable<T>> void printNodeInternal(List<Node<T>> nodes, int level,
 			int maxLevel) {
 		if (nodes.isEmpty() || BSTPrinter.isAllElementsNull(nodes)) {
 			return;
@@ -80,7 +80,7 @@ public class BSTPrinter {
 		}
 	}
 
-	private static <T extends Comparable<?>> int maxLevel(Node<T> node) {
+	private static <T extends Comparable<T>> int maxLevel(Node<T> node) {
 		if (node == null) {
 			return 0;
 		}

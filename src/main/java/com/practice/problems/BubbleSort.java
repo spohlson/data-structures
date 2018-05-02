@@ -74,13 +74,6 @@ public class BubbleSort {
 		arr[idxTwo] = numOne;
 	}
 
-	public void bubbleSort(int[] arr) {
-		int swaps = bubbleSortReturnNumOfSwaps(arr);
-		System.out.println("Array is sorted in " + swaps + " swaps.");
-		System.out.println("First Element: " + arr[0]);
-		System.out.println("Last Element: " + arr[arr.length - 1]);
-	}
-
 	@Test
 	public void test() {
 		int[] arr = new int[] { 3, 2, 1 };
@@ -93,7 +86,40 @@ public class BubbleSort {
 	@Test
 	public void test1() {
 		int[] arr = new int[] { 3, 2, 1 };
+		int swaps = bubbleSortReturnNumOfSwaps(arr);
+		System.out.println("Array is sorted in " + swaps + " swaps.");
+		System.out.println("First Element: " + arr[0]);
+		System.out.println("Last Element: " + arr[arr.length - 1]);
+	}
+
+	/**
+	 * Bubble Sort Array
+	 */
+	public void bubbleSort(int[] arr) {
+		int len = arr.length;
+		int count = len;
+
+		while (count > 0) {
+
+			for (int i = 0; i < (count - 1); i++) {
+				int num = arr[i];
+				int next = arr[i + 1];
+
+				if (num > next) {
+					arr[i] = next;
+					arr[i + 1] = num;
+				}
+			}
+			count--;
+		}
+	}
+
+	@Test
+	public void testBubbleSort() {
+		int[] arr = new int[] { 5, 4, 3, 2, 1 };
+		int[] expected = new int[] { 1, 2, 3, 4, 5 };
 		bubbleSort(arr);
+		Assert.assertArrayEquals(expected, arr);
 	}
 
 }

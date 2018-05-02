@@ -1,14 +1,20 @@
 package com.practice.problems;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LongestCommonSubsequence {
+
+	private static final Logger LOG = LoggerFactory.getLogger(LongestCommonSubsequence.class);
+
+	/**
+	 * Helper method
+	 */
+	private int max(int a, int b) {
+		return (a >= b) ? a : b;
+	}
 
 	/**
 	 * Given two sequences, find the length of longest subsequence present in
@@ -17,99 +23,81 @@ public class LongestCommonSubsequence {
 	 * “abg”, “bdf”, “aeg”, ‘”acefg”, .. etc are subsequences of “abcdefg”. So a
 	 * string of length n has 2^n different possible subsequences.
 	 */
+	public int getLCS(String str1, String str2) {
+		int lcs = lcs(str1, 0, str2, 0);
+		return lcs;
+	}
 
-	private static final Logger LOG = LoggerFactory.getLogger(LongestCommonSubsequence.class);
+	private int lcs(String str1, int start1, String str2, int start2) {
+		if ((start1 >= str1.length()) || (start2 >= str2.length())) {
+			return 0;
+		}
+		char letter1 = str1.charAt(start1);
+		char letter2 = str2.charAt(start2);
 
-	@Test
-	public void test1() {
-		String seq1 = "ABCDGH";
-		String seq2 = "AEDFHR";
-		String expected = "ADH";
-		String output = getLCS(seq1, seq2);
-		Assert.assertTrue(expected.equals(output));
+		if (letter1 == letter2) {
+			return 1 + lcs(str1, start1 + 1, str2, start2 + 1);
+		}
+		return max(lcs(str1, start1 + 1, str2, start2), lcs(str1, start1, str2, start2 + 1));
 	}
 
 	@Test
-	public void test2() {
-		String seq1 = "AGGTAB";
-		String seq2 = "GXTXAYB";
-		String expected = "GTAB";
-		String output = getLCS(seq1, seq2);
-		Assert.assertTrue(expected.equals(output));
-	}
+	public void testGetLCS() {
+		String str1 = "ABCDGH";
+		String str2 = "AEDFHR";
+		int expected = 3;
+		int output = getLCS(str1, str2);
+		Assert.assertTrue(expected == output);
 
-	@Test
-	public void test3() {
-		String seq1 = "AGGTAB";
-		String seq2 = "GXTXAYB";
-		LOG.info("Seq1 - {}", seq1);
-		LOG.info("Seq2 - {}", seq2);
-		int expected = 4;
-		int output = lcs(seq1.toCharArray(), seq2.toCharArray(), seq1.length(), seq2.length());
+		str1 = "AGGTAB";
+		str2 = "GXTXAYB";
+		expected = 4;
+		output = getLCS(str1, str2);
 		Assert.assertTrue(expected == output);
 	}
 
-	public int lcs(char[] seq1, char[] seq2, int seq1Len, int seq2Len) {
-		if ((seq1Len == 0) || (seq2Len == 0)) {
-			return 0;
-		}
-		char seq1Char = seq1[seq1Len - 1];
-		char seq2Char = seq2[seq2Len - 1];
-
-		LOG.info("Comparing seq1 {} {} to seq2 {} {}", seq1Len - 1, seq1Char, seq2Len - 1,
-				seq2Char);
-
-		if (seq1Char == seq2Char) {
-			LOG.info("Matched: seq1 - {} {}, seq2 - {} {}", seq1Len - 1, seq1Char, seq2Len - 1,
-					seq2Char);
-			LOG.info("+1");
-			return 1 + lcs(seq1, seq2, seq1Len - 1, seq2Len - 1);
-		}
-		return max(lcs(seq1, seq2, seq1Len, seq2Len - 1), lcs(seq1, seq2, seq1Len - 1, seq2Len));
+	/**
+	 * Get the LCS using memoization
+	 */
+	public int getLCSMemoization(String str1, String str2) {
+		// Build this out using a Trie (like a binary tree for a dictionary but
+		// with the subsequences)
+		return 0;
 	}
 
-	public int max(int a, int b) {
-		return (a > b) ? a : b;
+	/**
+	 * Get the LCS using tabulation
+	 */
+	public int getLCSTabulation(String str1, String str2) {
+		char[][] tab = new char[str1.length() + 1][str2.length() + 1];
+
+		return 0;
 	}
 
-	public String getLCS(String str1, String str2) {
-		int str1Len = str1.length();
-		Map<Character, Integer> str1Map = new HashMap<>(str1Len);
+	// private char getLCSTab(char[][] tab, String str1, int start1, String
+	// str2, int start2) {
+	//
+	// }
 
-		for (int i = 0; i < str1Len; i++) {
-			str1Map.put(str1.charAt(i), i);
-		}
+	/**
+	 * Print the longest common subsequence
+	 */
+	public String printLCS(String str1, String str2) {
+		return "";
+	}
 
-		int maxSub = 0;
-		String seq = null;
+	@Test
+	public void testPrintLCS() {
+		String str1 = "ABCDGH";
+		String str2 = "AEDFHR";
+		String expected = "ADH";
+		String output = printLCS(str1, str2);
+		Assert.assertTrue(expected.equals(output));
 
-		for (int i = 0; i < str2.length(); i++) {
-			int count = 0;
-			char letter = str2.charAt(i);
-
-			if (str1Map.containsKey(letter)) {
-				count++;
-				seq = "" + letter;
-
-				int index = str1Map.get(letter);
-
-				for (int j = i + 1; j < str2.length(); j++) {
-					char next = str2.charAt(j);
-
-					if (str1Map.containsKey(next)) {
-						int nextIndex = str1Map.get(next);
-
-						if (nextIndex > index) {
-							count++;
-							seq += next;
-
-						}
-					}
-				}
-			}
-		}
-
-		return seq;
+		str1 = "AGGTAB";
+		str2 = "GXTXAYB";
+		expected = "GTAB";
+		Assert.assertTrue(expected.equals(output));
 	}
 
 }
