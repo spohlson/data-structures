@@ -133,7 +133,7 @@ public class Recursion {
 		Assert.assertFalse(output);
 
 		output = isPalindrome(str, 0, str.length() - 1);
-		Assert.assertFalse(output);
+		Assert.assertTrue(output);
 	}
 
 	/**
@@ -1016,6 +1016,58 @@ public class Recursion {
 		arr = new int[] { 3, 15, 67 };
 		expected = false;
 		Assert.assertTrue(expected == array220(arr, 0));
+	}
+
+	/**
+	 * Print digits of a number in reverse order
+	 */
+	public void printDigitsReverse(int num) {
+		if (num <= 0) {
+			return;
+		}
+		int rightNum = num % 10;
+		System.out.print(rightNum);
+
+		num = num / 10;
+		printDigitsReverse(num);
+	}
+
+	@Test
+	public void printDigitsReverseTest() {
+		int num = 123;
+		printDigitsReverse(num);
+		System.out.println();
+
+		num = 1;
+		printDigitsReverse(num);
+		System.out.println();
+
+		num = 654321;
+		printDigitsReverse(num);
+	}
+
+	/**
+	 * Print digits in order
+	 */
+	public void printDigitsInOrder(int num) {
+		if ((num / 10) > 0) {
+			printDigitsInOrder(num / 10);
+		}
+		System.out.printf("%d ", num % 10);
+	}
+
+	@Test
+	public void printDigitsInOrderTest() {
+		int num = 123;
+		printDigitsInOrder(num);
+		System.out.println();
+
+		num = 1;
+		printDigitsInOrder(num);
+		System.out.println();
+
+		num = 654321;
+		printDigitsInOrder(num);
 	}
 
 }

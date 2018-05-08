@@ -8,52 +8,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-public class TicTacToeAttempt {
-
-	class TicTacToe {
-
-		private Player[][] board;
-
-		public class Player {
-
-			private int userId;
-
-			public Player(int userId) {
-				if ((userId >= 2) || (userId < 0)) {
-					// throw some exception
-				}
-				this.userId = userId;
-			}
-
-			private boolean isX() {
-				return userId == 1;
-			}
-
-			private int getUserId() {
-				return userId;
-			}
-
-		}
-
-		// public boolean isPlayerWinner(Player player) {
-		// int numOfRows = board.length;
-		// int numOfColumns = board[0].length;
-		//
-		// Player[] column = board[0][0];
-		//
-		// for (int i = 0; i < numOfColumns; i++) {
-		// int rowIndex = 0;
-		//
-		// while (rowIndex < numOfRows) {
-		// Player[] row = board[rowIndex];
-		//
-		// rowIndex++;
-		// }
-		//
-		// }
-		// }
-
-	}
+public class MaxResourcesConsumed {
 
 	class Solution {
 
