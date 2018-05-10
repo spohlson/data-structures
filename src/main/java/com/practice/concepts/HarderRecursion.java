@@ -1,5 +1,9 @@
 package com.practice.concepts;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -59,6 +63,149 @@ public class HarderRecursion {
 		target = 11;
 		expected = true;
 		Assert.assertTrue(expected == groupSum(start, arr, target));
+	}
+
+	/**
+	 * Write a function that sums all numbers in a 2D array. Do not use loops.
+	 */
+	public int sum2DArray(int[][] grid) {
+		int start = 0;
+		int sum = 0;
+		return sum2DArray(grid, sum, start);
+	}
+
+	private int sum2DArray(int[][] grid, int sum, int start) {
+		if (start == grid.length) {
+			return sum;
+		}
+		sum = sumArray(grid[start], sum, 0);
+		return sum2DArray(grid, sum, start + 1);
+	}
+
+	private int sumArray(int[] arr, int sum, int start) {
+		if (start == arr.length) {
+			return sum;
+		}
+		sum += arr[start];
+		return sumArray(arr, sum, start + 1);
+	}
+
+	@Test
+	public void testSum2DArray() {
+		int[][] grid = new int[][] { { 1, 2, 3 }, { 4, 5 }, { 6, 7, 8, 9, 10 } };
+		int expected = 55;
+		int output = sum2DArray(grid);
+		Assert.assertTrue(expected == output);
+	}
+
+	/**
+	 * Write a function that generates all possible combinations of 1 and 0 for
+	 * n bits. Ex. If the function receives 2 as the number of bits, it should
+	 * produce 4 combinations: 00, 01, 10, 11. You cannot use any mathematical
+	 * operators.
+	 */
+	public Set<String> getBitCombinations(int n) {
+		int numOfBits = 2;
+		int numOfCombos = (int) Math.pow(numOfBits, n);
+		Set<String> combos = new HashSet<>(numOfCombos);
+		getBitCombos(combos, numOfCombos, n, 0, "");
+		return combos;
+	}
+
+	private void getBitCombos(Set<String> combos, int numOfCombos, int slots, int bit, String combo) {
+		if (combos.size() == numOfCombos) {
+			return;
+		} else if (combo.length() == slots) {
+			combos.add(combo);
+			return;
+		}
+		int oppBit = bit ^ 1;
+		String oppCombo = combo + oppBit;
+		getBitCombos(combos, numOfCombos, slots, oppBit, oppCombo);
+
+		combo = combo + bit;
+		getBitCombos(combos, numOfCombos, slots, bit, combo);
+	}
+
+	@Test
+	public void testGetBitCombinations() {
+		int n = 2;
+		Set<String> combos = getBitCombinations(n);
+		int expected = (int) Math.pow(2, n);
+		Assert.assertTrue(combos.size() == expected);
+		System.out.println("N: " + n + ", " + combos.size() + " combos\n" + combos + "\n");
+
+		n = 3;
+		combos = getBitCombinations(n);
+		expected = (int) Math.pow(2, n);
+		Assert.assertTrue(combos.size() == expected);
+		System.out.println("N: " + n + ", " + combos.size() + " combos\n" + combos + "\n");
+
+		n = 4;
+		combos = getBitCombinations(n);
+		expected = (int) Math.pow(2, n);
+		Assert.assertTrue(combos.size() == expected);
+		System.out.println("N: " + n + ", " + combos.size() + " combos\n" + combos + "\n");
+	}
+
+	/**
+	 * Print all possible combinations of binary
+	 */
+	public class BinaryCombos {
+
+		private String[] combo;
+
+		public BinaryCombos() {
+			combo = new String[2];
+		}
+
+		private void binary(int n) {
+			if (n == 0) {
+				System.out.println(String.join("", combo));
+			} else {
+				combo[n - 1] = "0";
+				binary(n - 1);
+
+				combo[n - 1] = "1";
+				binary(n - 1);
+			}
+		}
+
+	}
+
+	@Test
+	public void testBinaryCombos() {
+		BinaryCombos bCombos = new BinaryCombos();
+		bCombos.binary(2);
+	}
+
+	/**
+	 * Find the kth largest # in an array recursively
+	 */
+	public int kthLargest(int[] arr, int k) {
+
+		return 0;
+	}
+
+	/**
+	 * 
+	 */
+	public int kthLargestWithSort(int[] arr, int k) {
+		Arrays.sort(arr);
+
+		if ((k <= 0) || (k > arr.length)) {
+			return -1;
+		}
+		return arr[k - 1];
+	}
+
+	@Test
+	public void testKthLargestWithSort() {
+		int[] arr = new int[] { 3, 2, 8, 5, 16, 9 };
+		int k = 4;
+		int expected = 8;
+		int output = kthLargestWithSort(arr, k);
+		Assert.assertTrue(expected == output);
 	}
 
 	/**

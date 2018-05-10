@@ -169,8 +169,73 @@ public class TowerOfHanoi {
 				firstRod.getNext().getNext().getStack());
 	}
 
-	public void toh(int n, char from, char to, char aux) {
+	/**
+	 * Solution #2
+	 * 
+	 *  -      |      |
+	 *  --     |      |
+	 *  ---    |      |
+	 * _____  _____  _____
+	 * src    aux    dest
+	 */
+	public void toh(int n, Stack<Integer> src, Stack<Integer> aux, Stack<Integer> dest) {
+		// base case, if 1 disk is left then move it to target rod
+		if (n == 1) {
+			dest.push(src.pop());
+			return;
+		}
+		/**
+		 * move all disks except the last/largest from src to aux rod (that's
+		 * why aux and dest rods are swapped in func call so that aux rod
+		 * becomes destination for all but the largest disk)
+		 * 
+		 *   |     |       |
+		 *   |     -       |
+		 *  ---    --      |
+		 * _____  _____  _____
+		 *  src    aux   dest
+		 */
+		toh(n - 1, src, dest, aux);
 
+		/**
+		 * move the last disk from src to dest rod
+		 * 
+		 *   |     |       |
+		 *   |     -       |
+		 *   |     --     ---
+		 * _____  _____  _____
+		 *  src    aux   dest
+		 */
+		dest.push(src.pop());
+
+		/**
+		 * move the remaining disks from aux to target rod, that's why aux and
+		 * src rods are swapped in a func call so aux rod becomes src
+		 * 
+		 *   |     |       -
+		 *   |     |      --
+		 *   |     |      ---
+		 * _____  _____  _____
+		 *  src    aux   dest
+		 */
+		toh(n - 1, aux, src, dest);
+	}
+
+	@Test
+	public void testTOH() {
+		Stack<Integer> src = new Stack<>();
+		src.push(3);
+		src.push(2);
+		src.push(1);
+
+		Stack<Integer> aux = new Stack<>();
+		Stack<Integer> dest = new Stack<>();
+
+		toh(3, src, aux, dest);
+
+		Assert.assertTrue(dest.pop() == 1);
+		Assert.assertTrue(dest.pop() == 2);
+		Assert.assertTrue(dest.pop() == 3);
 	}
 
 	@Test
