@@ -20,12 +20,10 @@ public class RotateArray {
 	public void rotateArrByReversal(int[] arr, int k) {
 		int len = arr.length;
 
-		if (len < 2) {
+		if ((len < 2) || (k == 0)) {
 			return;
 		} else if (k > len) {
 			k = k % len;
-		} else if (k == 0) {
-			return;
 		} else if (k < 0) {
 			k += len;
 		}

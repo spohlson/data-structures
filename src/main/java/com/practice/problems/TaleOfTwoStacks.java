@@ -3,6 +3,7 @@ package com.practice.problems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,31 +45,35 @@ public class TaleOfTwoStacks {
 
 	public class MyQueue<K> {
 
-		private List<K> stack;
+		private Stack<K> in;
+		private Stack<K> out;
 
 		public MyQueue() {
-			stack = new ArrayList<K>();
+			in = new Stack<>();
+			out = new Stack<>();
 		}
 
-		/**
-		 * Append element to end of stack
-		 */
 		public void enqueue(K element) {
-			stack.add(element);
+			in.push(element);
 		}
 
-		/**
-		 * Remove first element in stack
-		 */
-		public void dequeue() {
-			stack.remove(0);
+		public K dequeue() {
+			if (out.isEmpty()) {
+
+				while (!in.isEmpty()) {
+					out.push(in.pop());
+				}
+			}
+			return out.pop();
 		}
 
-		/**
-		 * Returns first element in stack
-		 */
 		public K peek() {
-			return stack.get(0);
+			if (out.isEmpty()) {
+				while (!in.empty()) {
+					out.push(in.pop());
+				}
+			}
+			return out.peek();
 		}
 
 	}

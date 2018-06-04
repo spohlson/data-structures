@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.springframework.util.CollectionUtils;
+
 public class BinarySearchTree<T extends Comparable<T>> {
 
 	/**
@@ -55,34 +57,36 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	}
 
 	public void insert(T data) {
-		insert(data, root);
+		if (root == null) {
+			root = new Node<T>(data);
+		} else {
+			insert(data, root);
+		}
 	}
 
 	private void insert(T data, Node<T> node) {
-		if (node != null) {
-			int comp = data.compareTo(node.getData());
+		int comp = data.compareTo(node.getData());
 
-			// no duplicates
-			if (comp == 0) {
-				return;
-			}
+		// no duplicates
+		if (comp == 0) {
+			return;
+		}
 
-			if (comp == -1) {
-				Node<T> left = node.getLeft();
+		if (comp == -1) {
+			Node<T> left = node.getLeft();
 
-				if (left == null) {
-					node.setLeft(new Node<>(data));
-				} else {
-					insert(data, left);
-				}
+			if (left == null) {
+				node.setLeft(new Node<>(data));
 			} else {
-				Node<T> right = node.getRight();
+				insert(data, left);
+			}
+		} else {
+			Node<T> right = node.getRight();
 
-				if (right == null) {
-					node.setRight(new Node<>(data));
-				} else {
-					insert(data, right);
-				}
+			if (right == null) {
+				node.setRight(new Node<>(data));
+			} else {
+				insert(data, right);
 			}
 		}
 	}
@@ -397,6 +401,36 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		for (Node<T> node : above) {
 			print(node.getData());
 		}
+	}
+
+	public int getHeightBFS() {
+		int height = 0;
+
+		if (root == null) {
+			return -1;
+		}
+		List<Node<T>> levelAbove = Arrays.asList(root);
+
+		while (!CollectionUtils.isEmpty(levelAbove)) {
+			List<Node<T>> level = new ArrayList<>();
+
+			for (Node<T> node : levelAbove) {
+				Node<T> left = node.getLeft();
+
+				if (left != null) {
+					level.add(left);
+				}
+				Node<T> right = node.getRight();
+
+				if (right != null) {
+					level.add(right);
+				}
+			}
+			levelAbove = level;
+
+			height++;
+		}
+		return height;
 	}
 
 	private void print(T data) {
